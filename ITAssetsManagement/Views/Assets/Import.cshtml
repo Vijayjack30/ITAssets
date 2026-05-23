@@ -1,0 +1,17 @@
+<h2>Import Assets from Excel</h2>
+<form asp-action="ImportExcel"
+      asp-controller="Assets"
+      method="post"
+      enctype="multipart/form-data">
+    <div class="mb-3">
+        <input type="file" name="file" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+@if (TempData["MSG"] != null)
+{
+    <div class="alert alert-info mt-3">
+        @TempData["MSG"]
+    </div>
+}

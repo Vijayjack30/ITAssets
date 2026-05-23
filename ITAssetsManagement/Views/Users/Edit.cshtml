@@ -1,0 +1,25 @@
+﻿@model ITAssetsManagement.Models.AssetUser
+<h2>Edit User</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="UserId" />
+    <div class="mb-3">
+        <label>User Name</label>
+        <input asp-for="UserName" class="form-control" readonly />
+    </div>
+    <div class="mb-3">
+        <label>Department</label>
+        <select asp-for="DeptName"
+                class="form-control"
+                asp-items="ViewBag.DepartmentList">
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>User Status</label>
+        <select asp-for="User_Status"
+                class="form-control"
+                asp-items="ViewBag.StatusList">
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,357 @@
+﻿@model ITAssetsManagement.Models.DashboardVM
+@{
+	ViewData["Title"] = "Asset Dashboard";
+}
+<style>
+	.hero-card {
+		background: linear-gradient(135deg, #1e3a8a, #2563eb);
+		color: white;
+		border-radius: 18px;
+	}
+
+	.status-card {
+		border-radius: 14px;
+		transition: all .2s ease-in-out;
+	}
+
+		.status-card:hover {
+			transform: translateY(-5px);
+		}
+
+	.asset-tile {
+		border-radius: 14px;
+		transition: all .2s ease-in-out;
+	}
+
+		.asset-tile:hover {
+			transform: translateY(-6px);
+			background-color: #f8fafc;
+		}
+
+	.bg-donated {
+		background-color: #7c3aed;
+		color: #fff;
+	}
+
+	.bg-lost {
+		background-color: #b91c1c;
+		color: #fff;
+	}
+</style>
+<h3 class="text-center mb-4">📊 Asset Dashboard</h3>
+<!-- TOTAL ASSETS -->
+<div class="row mb-5">
+	<div class="col-12">
+		<a asp-controller="Assets" asp-action="Index" class="text-decoration-none text-white" asp-route-fromHome="true">
+			<div class="card hero-card shadow-lg">
+				<div class="card-body text-center py-5">
+					<h1 class="display-3 fw-bold">@Model.TotalAssets</h1>
+					<p class="fs-5 mb-0">Total Assets in System</p>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+<!-- WORKING / NOT WORKING -->
+<div class="row mb-5">
+	<div class="col-md-6">
+		<a asp-controller="Assets" asp-action="Index" asp-route-condition="1" class="text-decoration-none text-white" asp-route-fromHome="true">
+			<div class="card status-card bg-success text-white shadow">
+				<div class="card-body d-flex justify-content-between align-items-center">
+					<div>
+						<h2>@Model.Working</h2>
+						<small>Working Assets</small>
+					</div>
+					<i class="bi bi-check-circle-fill fs-1"></i>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-6">
+		<a asp-controller="Assets" asp-action="Index" asp-route-condition="2" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card status-card bg-warning text-dark shadow">
+				<div class="card-body d-flex justify-content-between align-items-center">
+					<div>
+						<h2>@Model.NotWorking</h2>
+						<small>Not Working Assets</small>
+					</div>
+					<i class="bi bi-exclamation-circle-fill fs-1"></i>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+<!-- STATUS COUNTS -->
+<h5 class="mb-3">Asset Status</h5>
+<div class="row g-3 mb-5 text-center">
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-status="1" class="text-decoration-none text-white" asp-route-fromHome="true">
+			<div class="card status-card bg-success text-white shadow">
+				<div class="card-body">
+					<i class="bi bi-box fs-4"></i>
+					<h5>@Model.InStock</h5>
+					<small>In Stock</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-status="2" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card status-card bg-warning text-dark shadow">
+				<div class="card-body">
+					<i class="bi bi-arrow-left-right fs-4"></i>
+					<h5>@Model.Assigned</h5>
+					<small>Assigned</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		@* <a asp-controller="AssetAssignments" asp-action="Index" asp-route-mode="InRepair" class="text-decoration-none text-white" asp-route-fromHome="true"> *@
+		<a asp-controller="Assets" asp-action="Index" asp-route-status="6" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card status-card bg-info text-white shadow">
+				<div class="card-body">
+					<i class="bi bi-tools fs-4"></i>
+					<h5>@Model.InRepair</h5>
+					<small>In Repair</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-status="3" class="text-decoration-none text-white" asp-route-fromHome="true">
+			<div class="card status-card bg-danger text-white shadow">
+				<div class="card-body">
+					<i class="bi bi-trash fs-4"></i>
+					<h5>@Model.Disposed</h5>
+					<small>Disposed</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-status="4" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card status-card bg-donated shadow">
+				<div class="card-body">
+					<i class="bi bi-gift fs-4"></i>
+					<h5>@Model.Donated</h5>
+					<small>Donated</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-status="5" class="text-decoration-none text-white" asp-route-fromHome="true">
+			<div class="card status-card bg-lost shadow">
+				<div class="card-body">
+					<i class="bi bi-exclamation-triangle-fill fs-4"></i>
+					<h5>@Model.Lost</h5>
+					<small>Lost / Stolen</small>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+<!-- ASSET TYPES -->
+<h5 class="mb-3">Asset Types</h5>
+<div class="row g-3 mb-5 text-center">
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="1" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-pc-display fs-2 text-primary"></i>
+					<h6>@Model.Desktop</h6>
+					<small>Desktop</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="2" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-laptop fs-2 text-primary"></i>
+					<h6>@Model.Laptop</h6>
+					<small>Laptop</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="17" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body text-center">
+					<i class="bi bi-display fs-2 text-primary"></i>
+					<h6>@Model.Workstation</h6>
+					<small>Workstation</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="3" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-apple fs-2 text-primary"></i>
+					<h6>@Model.Mac</h6>
+					<small>iMac / Mac</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="4" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-tablet fs-2 text-primary"></i>
+					<h6>@Model.Tablet</h6>
+					<small>Tablet / iPad</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="5" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-hdd-network fs-2 text-primary"></i>
+					<h6>@Model.Server</h6>
+					<small>Server</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="6" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-shield-lock fs-2 text-primary"></i>
+					<h6>@Model.Firewall</h6>
+					<small>Firewall</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="7" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-device-hdd fs-2 text-primary"></i>
+					<h6>@Model.InternalHardDisk</h6>
+					<small>Internal HDD</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="8" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-usb-drive fs-2 text-primary"></i>
+					<h6>@Model.ExternalHardDisk</h6>
+					<small>External HDD</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="9" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-display fs-2 text-primary"></i>
+					<h6>@Model.Monitor</h6>
+					<small>Monitor</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="10" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-keyboard fs-2 text-primary"></i>
+					<h6>@Model.Keyboard</h6>
+					<small>Keyboard</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="11" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-mouse fs-2 text-primary"></i>
+					<h6>@Model.Mouse</h6>
+					<small>Mouse</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="12" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-printer fs-2 text-primary"></i>
+					<h6>@Model.Printer</h6>
+					<small>Printer</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="13" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-upc-scan fs-2 text-primary"></i>
+					<h6>@Model.Scanner</h6>
+					<small>Scanner</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="14" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-router fs-2 text-primary"></i>
+					<h6>@Model.Router</h6>
+					<small>Router</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="15" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-diagram-3 fs-2 text-primary"></i>
+					<h6>@Model.Switch</h6>
+					<small>Switch</small>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="16" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-database fs-2 text-primary"></i>
+					<h6>@Model.Storage</h6>
+					<small>Storage</small>
+				</div>
+			</div>
+		</a>
+	</div>
+
+	<div class="col-md-2">
+		<a asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="18" class="text-decoration-none text-dark" asp-route-fromHome="true">
+			<div class="card asset-tile shadow">
+				<div class="card-body">
+					<i class="bi bi-box-seam fs-2 text-primary"></i>
+					<h6>@Model.OtherAccessories</h6>
+					<small>Other Accessories</small>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>

@@ -1,0 +1,47 @@
+@model ITAssetsManagement.Models.AssetAssignment
+<h2>Assign Asset</h2>
+<form asp-action="Create" method="post">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label>Asset</label>
+            <select asp-for="AssetId"
+                    asp-items="ViewBag.Assets"
+                    class="form-select">
+                <option value="">-- Select Asset --</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label>Assigned To</label>
+            <select asp-for="AssignedTo"
+                    asp-items="ViewBag.Users"
+                    class="form-select"
+                    required>
+                <option value="">-- Select User --</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label>Asset Location</label>
+            <select asp-for="AssetLocation"
+                    asp-items="ViewBag.LocationList"
+                    class="form-control">
+                <option value="">-- Select Location --</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label>Comments</label>
+            <textarea asp-for="Comments" class="form-control"></textarea>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">
+        <i class="bi bi-box-arrow-right"></i> Assign
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-clockwise"></i> Cancel
+    </a>
+</form>

@@ -1,0 +1,33 @@
+﻿<h3>Add Asset Model</h3>
+@if (TempData["MSG"] != null)
+{
+    <div class="alert alert-success">@TempData["MSG"]</div>
+}
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label>Asset Type</label>
+        <select name="assetType" class="form-control" required>
+            <option value="">-- Select Asset Type --</option>
+            @foreach (var item in ViewBag.AssetTypes)
+            {
+                <option value="@item.Name">@item.Name</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Asset Model</label>
+        <input type="text"
+               name="assetModel"
+               class="form-control"
+               placeholder="Enter Asset Model"
+               required />
+    </div>
+    <button type="submit" class="btn btn-success">
+        Save Asset Model
+    </button>
+    <a asp-controller="Assets"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Back
+    </a>
+</form>

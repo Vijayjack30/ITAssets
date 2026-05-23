@@ -1,0 +1,8 @@
+@model ITAssetsManagement.Models.Asset
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="AssetId" />
+    <p>Are you sure you want to delete Asset ID: <b>@Model.AssetId</b> ?</p>
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

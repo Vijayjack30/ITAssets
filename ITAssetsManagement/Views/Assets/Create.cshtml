@@ -1,0 +1,148 @@
+@section Scripts {
+	<script>
+		$('#AssetTypeId').change(function () {
+
+			var assetTypeText = $('#AssetTypeId option:selected').text();
+
+			$('#AssetModel')
+				.empty()
+				.append('<option value="">-- Select Asset Model --</option>');
+
+			if (assetTypeText !== '' && assetTypeText !== '-- Select Asset Type --') {
+
+				$.ajax({
+					url: '@Url.Action("GetAssetModels", "Assets")',
+					type: 'GET',
+					data: { assetType: assetTypeText },
+					success: function (data) {
+
+						$.each(data, function (i, model) {
+
+							$('#AssetModel')
+								.append('<option value="' + model + '">' + model + '</option>');
+						});
+					}
+				});
+			}
+		});
+	</script>
+}
+
+@model ITAssetsManagement.Models.Asset
+<h2>Add Asset</h2>
+<form asp-action="Create" asp-controller="Assets" method="post">
+	@Html.AntiForgeryToken()
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<div class="col-md-6 mb-3">
+		<label>Asset ID</label>
+		<input asp-for="AssetId" class="form-control" required />
+		<span asp-validation-for="AssetId" class="text-danger"></span>
+	</div>
+	<div class="row">
+		<div class="col-md-6 mb-3">
+			<label>Asset Type</label>
+			@if (ViewBag.AssetTypes != null)
+			{
+				<select asp-for="AssetTypeId"
+						id="AssetTypeId"
+						class="form-control"
+						asp-items="@(new SelectList(ViewBag.AssetTypes, "Id", "Name"))"
+						required>
+					<option value="">-- Select Asset Type --</option>
+				</select>
+				<span asp-validation-for="AssetTypeId" class="text-danger"></span>
+			}
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Asset Model</label>
+			@if (ViewBag.AssetModels != null)
+			{
+				<select asp-for="AssetModel"
+						id="AssetModel"
+						class="form-control"
+						required>
+					<option value="">-- Select Asset Model --</option>
+				</select>
+				<span asp-validation-for="AssetModel" class="text-danger"></span>
+			}
+			else
+			{
+				<select asp-for="AssetModel" class="form-control" required">
+					<option value="">-- Select Asset Model --</option>
+				</select>
+				<span asp-validation-for="AssetModel" class="text-danger"></span>
+			}
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Serial Number</label>
+			<input asp-for="SerialNumber" class="form-control" required />
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Invoice Number</label>
+			<input asp-for="InvoiceNumber" class="form-control" />
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Purchased Date</label>
+			<input asp-for="PurchasedDate" type="date" class="form-control" />
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Purchased From</label>
+			<input asp-for="PurchasedFrom" class="form-control" />
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Purchased As</label>
+			@if (ViewBag.PurchasedAsList != null)
+			{
+				<select asp-for="PurchasedAs" class="form-control" required
+						asp-items="@(new SelectList(ViewBag.PurchasedAsList, "PurchasedAs", "PurchasedAs"))">
+					<option value="">-- Select --</option>
+				</select>
+				<span asp-validation-for="PurchasedAs" class="text-danger"></span>
+			}
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Status</label>
+			@if (ViewBag.AssetStatuses != null)
+			{
+				<select asp-for="Status" class="form-control" required
+						asp-items="@(new SelectList(ViewBag.AssetStatuses, "Id", "Name"))">
+					<option value="">-- Select Status --</option>
+				</select>
+				<span asp-validation-for="Status" class="text-danger"></span>
+			}
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Condition</label>
+			@if (ViewBag.AssetConditions != null)
+			{
+				<select asp-for="Condition" class="form-control" required
+						asp-items="@(new SelectList(ViewBag.AssetConditions, "CondId", "CondName"))">
+					<option value="">-- Select Condition --</option>
+				</select>
+				<span asp-validation-for="Condition" class="text-danger"></span>
+			}
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Disposed Date</label>
+			<input asp-for="DisposedDate" type="date" class="form-control" />
+		</div>
+		<div class="col-md-6 mb-3">
+			<label>Last Modified</label>
+			<input class="form-control"
+				   value="@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")"
+				   readonly />
+		</div>
+		<div class="col-md-12 mb-3">
+			<label>Comments</label>
+<textarea asp-for="Comments" class="form-control"></textarea>
+		</div>
+	</div>
+	<button type="submit" class="btn btn-success">Save Asset</button>
+	@* <a href="/Assets" class="btn btn-secondary">Cancel</a> *@
+	<a asp-action="Index" class="btn btn-secondary">Cancel</a>
+
+	@if (TempData["MSG"] != null)
+	{
+		<div style="color:red">@TempData["MSG"]</div>
+	}
+</form>

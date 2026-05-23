@@ -1,0 +1,64 @@
+﻿html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.custom-table-head th {
+    background-color: #0d6efd; /* Bootstrap primary blue */
+    color: #fff;
+}
+/*.custom-table-scroll {
+    width: 100%;
+}*/
+.custom-table-scroll {
+    max-height: 500px; /* Vertical scroll height */
+    overflow: auto; /* Enables both vertical & horizontal scroll */
+}
+
+    .custom-table-scroll table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .custom-table-scroll thead th {
+        position: sticky;
+        top: 0;
+        background-color: #0d6efd; /* Keep your blue */
+        color: #fff;
+        z-index: 10;
+    }
+
+.col-comments {
+    width: 300px; /* 👈 COMMENTS WIDTH */
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.col-models {
+    width: 200px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.col-serialno {
+    width: 200px;
+    word-wrap: break-word;
+    white-space: normal;
+}

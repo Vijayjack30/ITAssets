@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ITAssetsManagement.Models.AssetUser>
+<h2>Users</h2>
+<form method="get" class="row g-3 mb-3">
+	<div class="col-md-3">
+		<label>Department</label>
+		<select name="department"
+				class="form-select"
+				asp-items="ViewBag.DepartmentList" onchange="this.form.submit()">
+			<option value="">-- All Departments --</option>
+		</select>
+	</div>
+	<div class="col-md-3">
+		<label>User Status</label>
+		<select name="status"
+				class="form-select"
+				asp-items="ViewBag.StatusList" onchange="this.form.submit()">
+			<option value="">-- All Status --</option>
+		</select>
+	</div>
+	<div class="col-md-4">
+		<label>User</label>
+		<select name="userId"
+				class="form-select"
+				asp-items="ViewBag.UserList" onchange="this.form.submit()">
+			<option value="">-- All Users --</option>
+		</select>
+	</div>
+	<div class="col-md-2 d-flex align-items-end">
+		<a asp-action="Index" class="btn btn-secondary">Reset</a>
+	</div>
+</form>
+<div class="custom-table-scroll">
+	<table class="table table-bordered table-hover align-top text-nowrap" style="min-width: 1000px;">
+		<thead class="custom-table-head">
+			<tr>
+				<th>User ID</th>
+				<th>Name</th>
+				<th>Department</th>
+				<th>User Status</th>
+				@if (ViewBag.IsFullAccess == true)
+				{
+					<th>Actions</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var u in Model)
+			{
+				<tr>
+					<td>@u.UserId</td>
+					<td>@u.UserName</td>
+					<td>@u.DeptName</td>
+					<td>@u.User_Status</td>
+					<td>
+						@if (ViewBag.IsFullAccess == true)
+						{
+							<a asp-action="Edit" asp-route-id="@u.UserId" class="btn btn-sm btn-primary">✏️ Edit</a>
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

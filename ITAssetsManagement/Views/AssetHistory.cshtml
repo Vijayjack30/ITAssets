@@ -1,0 +1,40 @@
+﻿@model List<AssetAssignmentVM>
+
+<h3 class="mb-3">
+    Asset History – @ViewBag.AssetId
+</h3>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Assigned To</th>
+            <th>Location</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted">
+                    No active history found
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.AssignedToDisplay</td>
+                    <td>@item.AssetLocation</td>
+                    <td>@item.Comments</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">
+    ⬅ Back to Assets
+</a>

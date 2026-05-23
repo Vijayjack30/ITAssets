@@ -1,0 +1,31 @@
+﻿@model ITAssetsManagement.Models.AssetUser
+<h2>Add User</h2>
+<form asp-action="Create" method="post">
+    <div class="mb-3 col-md-4">
+        <label>User ID</label>
+        <input asp-for="UserId" class="form-control" required />
+    </div>
+    <div class="mb-3 col-md-4">
+        <label>User Name</label>
+        <input asp-for="UserName" class="form-control" required />
+    </div>
+    <div class="mb-3 col-md-4">
+        <label>Password</label>
+        <input asp-for="UserPassword" type="password"
+               class="form-control" required />
+    </div>
+    <div class="mb-3 col-md-4">
+        <label>Department</label>
+        <select asp-for="DeptName" class="form-select">
+            <option value="IT">IT</option>
+            <option value="Systems">Digitization</option>
+            <option value="GENERAL">General</option>
+            <option value="Systems">Systems</option>
+            <option value="Systems">Typesetting</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">
+        <i class="bi bi-save"></i> Save
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

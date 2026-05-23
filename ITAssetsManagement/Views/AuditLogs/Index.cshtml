@@ -1,0 +1,100 @@
+@model IEnumerable<ITAssetsManagement.Models.AuditLog>
+<h2 class="mb-3">Audit Log</h2>
+<form method="get" class="row g-3 mb-4">
+    <!-- Action -->
+    <div class="col-md-2">
+        <label class="form-label">Action</label>
+        <select name="logAction" class="form-select" onchange="this.form.submit()">
+            <option value="">-- All --</option>
+            @foreach (var a in (List<string>)ViewBag.ActionList)
+            {
+                <option value="@a" selected="@(Context.Request.Query["logAction"] == a)">
+                    @a
+                </option>
+            }
+        </select>
+    </div>
+    <!-- Entity -->
+    <div class="col-md-2">
+        <label class="form-label">Entity</label>
+        <select name="entity" class="form-select" onchange="this.form.submit()">
+            <option value="">-- All --</option>
+            @foreach (var e in (List<string>)ViewBag.EntityList)
+            {
+                <option value="@e" selected="@(Context.Request.Query["entity"] == e)">
+                    @e
+                </option>
+            }
+        </select>
+    </div>
+    <!-- Asset ID -->
+    <div class="col-md-2">
+        <label class="form-label">Asset ID</label>
+        <select name="assetId" class="form-select" onchange="this.form.submit()">
+            <option value="">-- All --</option>
+            @foreach (var id in (List<string>)ViewBag.AssetIdList)
+            {
+                <option value="@id" selected="@(Context.Request.Query["assetId"] == id)">
+                    @id
+                </option>
+            }
+        </select>
+    </div>
+    <!-- Performed By -->
+    <div class="col-md-2">
+        <label class="form-label">Performed By</label>
+        <select name="performedBy" class="form-select" onchange="this.form.submit()">
+            <option value="">-- All --</option>
+            @foreach (var u in (List<string>)ViewBag.PerformedByList)
+            {
+                <option value="@u" selected="@(Context.Request.Query["performedBy"] == u)">
+                    @u
+                </option>
+            }
+        </select>
+    </div>
+    <!-- Reset -->
+    <div class="col-md-2 d-flex align-items-end">
+        <a asp-action="Index" class="btn btn-secondary w-100">
+            🔄 Reset
+        </a>
+    </div>
+</form>
+<div class="custom-table-scroll">
+    <table class="table table-bordered table-hover align-top text-nowrap" style="min-width: 800px;">
+        <thead class="custom-table-head text-left align-top">
+            <tr>
+                <th>Action</th>
+                <th>Entity</th>
+                <th>Asset ID</th>
+                <th>Performed By</th>
+                <th>Date & Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-left text-muted">
+                        No audit records found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var log in Model)
+                {
+                    <tr>
+                        <td class="fw-bold text-left">@log.Action</td>
+                        <td>@log.Entity</td>
+                        <td class="text-center">@log.AssetId</td>
+                        <td>@log.PerformedBy</td>
+                        <td class="text-left">
+                            @log.PerformedOn.ToString("dd-MM-yyyy HH:mm:ss")
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

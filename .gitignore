@@ -1,0 +1,11 @@
+# Visual Studio
+.vs/
+obj/
+
+# User-specific files
+*.user
+*.suo
+
+# Logs / temp
+*.log
+*.tmp

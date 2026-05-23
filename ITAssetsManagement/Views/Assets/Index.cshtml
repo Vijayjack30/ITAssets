@@ -1,0 +1,280 @@
+@using System.Linq
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model IEnumerable<ITAssetsManagement.Models.AssetIndexVM>
+@{
+	bool isFromHome = Context.Request.Query["fromHome"] == "true";
+}
+@functions {
+	string GetAssetTypeName(int id)
+	{
+		var list = ViewBag.AssetTypeList as SelectList;
+		return list?.FirstOrDefault(x => x.Value == id.ToString())?.Text ?? id.ToString();
+	}
+	string GetAssetModelName(int id)
+	{
+		var list = ViewBag.AssetModelLst as SelectList;
+		return list?.FirstOrDefault(x => x.Value == id.ToString())?.Text ?? id.ToString();
+	}
+	string GetStatusName(int id)
+	{
+		var list = ViewBag.StatusList as SelectList;
+		return list?.FirstOrDefault(x => x.Value == id.ToString())?.Text ?? id.ToString();
+	}
+	string GetConditionName(int id)
+	{
+		var list = ViewBag.ConditionList as SelectList;
+		return list?.FirstOrDefault(x => x.Value == id.ToString())?.Text ?? id.ToString();
+	}
+}
+
+@if (!isFromHome)
+{
+	
+	<h2 class="mb-3">Assets List</h2>
+
+	<div class="mb-3">
+		@if (ViewBag.IsFullAccess == true)
+		{
+			<a asp-action="Create" class="btn btn-success">Add Asset</a>
+			<a asp-controller="AssetModels" asp-action="Create" class="btn btn-primary">Add Asset Model</a>
+			<a class="btn btn-success" asp-controller="Users" asp-action="Index">User Lists</a>
+		}
+	</div>
+	<a asp-action="ExportToExcel" asp-route-assetTypeId="@Context.Request.Query["assetTypeId"]" asp-route-status="@Context.Request.Query["status"]" asp-route-condition="@Context.Request.Query["condition"]" class="btn btn-outline-success mb-3">📥 Export Excel</a>
+	@if (ViewBag.IsFullAccess == true)
+	{
+		<a asp-action="Import" class="btn btn-outline-primary mb-3 ms-2">📤 Import Excel</a>
+	}
+	<a asp-controller="AuditLogs" asp-action="Index" class="btn btn-outline-secondary  mb-3 ms-2">🧾 Audit Log</a>
+
+	<a asp-controller="AssetAssignments" asp-action="Index" class="btn btn-outline-secondary  mb-3 ms-2">🧾 Asset Assignment History</a>
+	<a asp-controller="Assets" asp-action="ActiveAssetHistory" class="btn btn-outline-warning mb-3 ms-2">📜 Active Asset History</a>
+
+	@if (ViewBag.IsFullAccess)
+	{
+		<form asp-controller="Admin"
+			  asp-action="SyncUsers"
+			  method="post"
+			  class="d-inline">
+			<button type="submit"
+					class="btn btn-outline-info mb-3 ms-2"
+					onclick="return confirm('Sync users from QSWFlow?');">
+				<i class="bi bi-arrow-repeat"></i> Sync Users
+			</button>
+		</form>
+	}
+}
+
+<form method="get" asp-action="Index"
+	  class="row row-cols-auto g-2 align-items-end mb-4 flex-nowrap">
+
+	<!-- Asset Type -->
+	<div>
+		<label class="form-label">Asset Type</label>
+		<select name="assetTypeId"
+				class="form-select"
+				asp-items="ViewBag.AssetTypeList"
+				onchange="this.form.submit()">
+			<option value="">-- All --</option>
+		</select>
+	</div>
+
+	<!-- Asset Model -->
+	<div>
+		<label class="form-label">Asset Model</label>
+		<select name="AssetModel"
+				class="form-select"
+				asp-items="ViewBag.AssetModelList"
+				onchange="this.form.submit()">
+			<option value="">-- All --</option>
+		</select>
+	</div>
+
+	<!-- Status -->
+	<div>
+		<label class="form-label">Status</label>
+		<select name="status"
+				class="form-select"
+				asp-items="ViewBag.StatusList"
+				onchange="this.form.submit()">
+			<option value="">-- All --</option>
+		</select>
+	</div>
+
+	<!-- Location -->
+	<div>
+		<label class="form-label">Location</label>
+		<select name="location"
+				class="form-select"
+				asp-items="ViewBag.LocationList"
+				onchange="this.form.submit()">
+			<option value="">-- All --</option>
+		</select>
+	</div>
+
+	<!-- Condition -->
+	<div>
+		<label class="form-label">Condition</label>
+		<select name="condition"
+				class="form-select"
+				asp-items="ViewBag.ConditionList"
+				onchange="this.form.submit()">
+			<option value="">-- All --</option>
+		</select>
+	</div>
+
+	<!-- Department -->
+	<div>
+		<label class="form-label">Department</label>
+		<select name="department"
+				class="form-select"
+				onchange="this.form.submit()">
+			<option value="">-- All Departments --</option>
+			@foreach (var d in ViewBag.DepartmentList as List<string>)
+			{
+				<option value="@d"
+						selected="@(Context.Request.Query["department"] == d)">
+					@d
+				</option>
+			}
+		</select>
+	</div>
+
+	<!-- Reset -->
+	<div class="align-self-end">
+		<a asp-action="Index" class="btn btn-secondary">🔄 Reset</a>
+	</div>
+
+</form>
+@if (!isFromHome)
+{
+	<div class="custom-table-scroll" style="max-height:500px;">
+		<table class="table table-bordered table-hover align-top text-nowrap" style="min-width: 1000px;">
+			<thead class="custom-table-head text-left align-top">
+				<tr>
+					<th>Actions</th>
+					<th>Asset ID</th>
+					<th>Asset Type</th>
+					<th class="col-models">Asset Model</th>
+					<th>User Name</th>
+					<th>Department</th>
+					<th>Location</th>
+					<th class="col-serialno">Serial Number</th>
+					<th>Invoice No</th>
+					<th>Purchased Date</th>
+					<th>Purchased From</th>
+					<th>Purchased As</th>
+					<th>Status</th>
+					<th>Condition</th>
+					<th>Disposed Date</th>
+					<th>Last Modified</th>
+					<th class="col-comments">Comments</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td class="text-left">
+							<div class="d-flex justify-content-left gap-2">
+								@if (ViewBag.IsFullAccess == true)
+								{
+									<a asp-action="Edit" asp-route-id="@item.Asset.AssetId" class="btn btn-sm btn-primary me-1" title="Edit"><i class="bi bi-pencil-square"></i></a>
+								}
+
+								<a asp-controller="Assets" asp-action="History" asp-route-id="@item.Asset.AssetId" class="btn btn-sm btn-info ms-1" title="History">📜</a>
+								@if (ViewBag.IsFullAccess == true && item.Asset.Status == 1)
+								{
+									<a asp-controller="AssetAssignments" asp-action="Create" asp-route-assetId="@item.Asset.AssetId" class="btn btn-sm btn-success ms-1" title="Assign Asset"><i class="bi bi-box-arrow-right"></i></a>
+								}
+							</div>
+						</td>
+						<td class="text-left fw-bold">@item.Asset.AssetId</td>
+						<td class="text-left fw-semibold">@GetAssetTypeName(item.Asset.AssetTypeId)</td>
+						<td class="col-models">@item.Asset.AssetModel</td>
+						<td>@item.UserName</td>
+						<td>@item.Department</td>
+						<td>@item.AssetLocation</td>
+						<td class="col-serialno">@item.Asset.SerialNumber</td>
+						<td>@item.Asset.InvoiceNumber</td>
+						<td>@item.Asset.PurchasedDate?.ToString("dd-MM-yyyy")</td>
+						<td>@item.Asset.PurchasedFrom</td>
+						<td>@item.Asset.PurchasedAs</td>
+						<td class="text-left"><span class="badge bg-info">@GetStatusName(item.Asset.Status)</span></td>
+						<td class="text-left"><span class="badge bg-secondary">@GetConditionName(item.Asset.Condition)</span></td>
+						<td class="text-left">@item.Asset.DisposedDate?.ToString("dd-MM-yyyy")</td>
+						<td>@item.Asset.LastModified.ToString("yyyy-MM-dd HH:mm:ss")</td>
+						<td class="text-left col-comments" style="-ms-column-width:inherit">@(string.IsNullOrWhiteSpace(item.Asset.Comments) ? "-" : item.Asset.Comments)</td>
+
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+else
+{
+	<div class="custom-table-scroll" style="max-height:650px;">
+		<table class="table table-bordered table-hover align-top text-nowrap" style="min-width: 1000px;">
+			<thead class="custom-table-head text-left align-top">
+				<tr>
+					<th>Actions</th>
+					<th>Asset ID</th>
+					<th>Asset Type</th>
+					<th class="col-models">Asset Model</th>
+					<th>User Name</th>
+					<th>Department</th>
+					<th>Location</th>
+					<th class="col-serialno">Serial Number</th>
+					<th>Invoice No</th>
+					<th>Purchased Date</th>
+					<th>Purchased From</th>
+					<th>Purchased As</th>
+					<th>Status</th>
+					<th>Condition</th>
+					<th>Disposed Date</th>
+					<th>Last Modified</th>
+					<th class="col-comments">Comments</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td class="text-left">
+							<div class="d-flex justify-content-left gap-2">
+								@if (ViewBag.IsFullAccess == true)
+								{
+									<a asp-action="Edit" asp-route-id="@item.Asset.AssetId" class="btn btn-sm btn-primary me-1" title="Edit"><i class="bi bi-pencil-square"></i></a>
+								}
+
+								<a asp-controller="Assets" asp-action="History" asp-route-id="@item.Asset.AssetId" class="btn btn-sm btn-info ms-1" title="History">📜</a>
+								@if (ViewBag.IsFullAccess == true && item.Asset.Status == 1)
+								{
+									<a asp-controller="AssetAssignments" asp-action="Create" asp-route-assetId="@item.Asset.AssetId" class="btn btn-sm btn-success ms-1" title="Assign Asset"><i class="bi bi-box-arrow-right"></i></a>
+								}
+							</div>
+						</td>
+						<td class="text-left fw-bold">@item.Asset.AssetId</td>
+						<td class="text-left fw-semibold">@GetAssetTypeName(item.Asset.AssetTypeId)</td>
+						<td class="col-models">@item.Asset.AssetModel</td>
+						<td>@item.UserName</td>
+						<td>@item.Department</td>
+						<td>@item.AssetLocation</td>
+						<td class="col-serialno">@item.Asset.SerialNumber</td>
+						<td>@item.Asset.InvoiceNumber</td>
+						<td>@item.Asset.PurchasedDate?.ToString("dd-MM-yyyy")</td>
+						<td>@item.Asset.PurchasedFrom</td>
+						<td>@item.Asset.PurchasedAs</td>
+						<td class="text-left"><span class="badge bg-info">@GetStatusName(item.Asset.Status)</span></td>
+						<td class="text-left"><span class="badge bg-secondary">@GetConditionName(item.Asset.Condition)</span></td>
+						<td class="text-left">@item.Asset.DisposedDate?.ToString("dd-MM-yyyy")</td>
+						<td>@item.Asset.LastModified.ToString("yyyy-MM-dd HH:mm:ss")</td>
+						<td class="text-left col-comments" style="-ms-column-width:inherit">@(string.IsNullOrWhiteSpace(item.Asset.Comments) ? "-" : item.Asset.Comments)</td>
+
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}

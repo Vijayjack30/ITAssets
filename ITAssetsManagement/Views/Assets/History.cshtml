@@ -1,0 +1,85 @@
+@model ITAssetsManagement.Models.AssetHistoryVM
+<h2>📜 Asset History – @Model.Asset.AssetId</h2>
+<hr />
+<h4>🧾 Asset Details</h4>
+<table class="table table-bordered">
+<tr>
+    <th>Asset Type</th>
+    <td>@Model.AssetTypeName</td>
+</tr>
+    <tr><th>Model</th><td>@Model.Asset.AssetModel</td></tr>
+    <tr><th>Serial No</th><td>@Model.Asset.SerialNumber</td></tr>
+<tr>
+    <th>Status</th>
+    <td>@Model.StatusName</td>
+</tr>
+</table>
+<hr />
+<h4>🔄 Assignment History</h4>
+<table class="table table-bordered table-hover">
+    <thead class="custom-table-head text-left align-top">
+        <tr>
+            <th>Assigned To</th>
+            <th>Assigned Date</th>
+            <th>Returned Date</th>
+            <th>Location</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var a in Model.Assignments)
+{
+        <tr>
+            <td>@a.AssignedTo</td>
+            <td>@a.AssignedDate.ToString("dd-MM-yyyy HH:mm")</td>
+            <td>
+                @(a.ReturnDate == null 
+                    ? "Currently Assigned" 
+                    : a.ReturnDate.Value.ToString("dd-MM-yyyy HH:mm"))
+            </td>
+            <td>@a.AssetLocation</td>
+        </tr>
+}
+@if (!Model.Assignments.Any())
+{
+        <tr>
+            <td colspan="4" class="text-center text-muted">
+                No assignment history
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<hr />
+<h4>📌 Audit Log</h4>
+<table class="table table-bordered table-hover">
+    <thead class="custom-table-head text-left align-top">
+        <tr>
+            <th>Action</th>
+            <th>Entity</th>
+            <th>Performed By</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var log in Model.AuditLogs)
+{
+        <tr>
+            <td>@log.Action</td>
+            <td>@log.Entity</td>
+            <td>@log.PerformedBy</td>
+            <td>@log.PerformedOn.ToString("dd-MM-yyyy HH:mm")</td>
+        </tr>
+}
+@if (!Model.AuditLogs.Any())
+{
+        <tr>
+            <td colspan="4" class="text-center text-muted">
+                No audit logs
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<a asp-action="Index" class="btn btn-secondary mt-3">
+    ⬅ Back to Assets
+</a>
